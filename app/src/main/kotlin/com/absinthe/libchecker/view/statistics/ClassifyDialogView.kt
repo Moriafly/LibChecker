@@ -41,14 +41,22 @@ class ClassifyDialogView(context: Context, val lifecycleScope: LifecycleCoroutin
     isVerticalScrollBarEnabled = false
     clipToPadding = false
     clipChildren = false
+    isNestedScrollingEnabled = false
     setHasFixedSize(true)
     FastScrollerBuilder(this).useMd2Style().build()
   }
 
   init {
     addPaddingTop(16.dp)
-    adapter.setOnItemClickListener { _, _, position ->
-      LCAppUtils.launchDetailPage(context as BaseActivity<*>, adapter.getItem(position))
+    adapter.apply {
+      setOnItemClickListener { _, _, position ->
+        LCAppUtils.launchDetailPage(context as BaseActivity<*>, adapter.getItem(position))
+      }
+      setEmptyView(
+        LibReferenceLoadingView(context).apply {
+          layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 500.dp)
+        }
+      )
     }
     addView(header)
     addView(list)
